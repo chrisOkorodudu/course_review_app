@@ -15,6 +15,6 @@ mongoose.connect('mongodb://localhost/hw08', (err, database) => {
   if (err) {
     return console.log(err);
   } else {
-    console.log('Connected to database'); 
+    console.log('Connected to database');
   }
 });
