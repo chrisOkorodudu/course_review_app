@@ -41,10 +41,12 @@ app.get('/api/reviews', function(req, res) {
 app.post('/api/review/create', (req, res) => {
   // TODO: create new review... if save succeeds, send back JSON
   // representation of saved object
+  console.log(req.body);
+  // console.log(req);
   const review = new Review({
     name: req.body.name,
     semester: req.body.semester,
-    year: req.body.semester,
+    year: req.body.year,
     review: req.body.review
   }).save((err, review) => {
     if (err) {

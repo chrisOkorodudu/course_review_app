@@ -2,7 +2,6 @@
 
 
 function getReviews() {
-
   const req = new XMLHttpRequest();
   // const container = document.createElement('div');
 
@@ -13,11 +12,15 @@ function getReviews() {
     const reviews = JSON.parse(req.responseText);
     const table = document.querySelector('tbody');
 
+    while(table.firstChild) {
+      table.removeChild(table.firstChild);
+    }
+
     for (const review of reviews) {
       const row = document.createElement('tr');
 
       Object.keys(review).forEach((key) => {
-        if (key !== '_id') {
+        if (key !== '_id' && key !== '__v') {
           const data = document.createElement('td');
           data.textContent = review[key];
           row.appendChild(data);
@@ -32,11 +35,11 @@ function getReviews() {
 }
 
 function filter(evt) {
-  evt.preventDefault();
+  if (evt) { evt.preventDefault(); }
+
   const semester = document.getElementById('filterSemester').value;
   const year = document.getElementById('filterYear').value;
   const query = '?semester='+semester + '&year=' + year;
-
   const req = new XMLHttpRequest();
 
   req.open('GET', 'api/reviews/' + query);
@@ -52,7 +55,7 @@ function filter(evt) {
       const row = document.createElement('tr');
 
       Object.keys(review).forEach((key) => {
-        if (key !== '_id') {
+        if (key !== '_id' && key !== '__v') {
           const data = document.createElement('td');
           data.textContent = review[key];
           row.appendChild(data);
@@ -67,7 +70,6 @@ function filter(evt) {
 }
 
 function addReview(evt) {
-  console.log('clicked');
   evt.preventDefault();
 
 
@@ -81,8 +83,38 @@ function addReview(evt) {
 
   const req = new XMLHttpRequest();
   req.open('POST', 'api/review/create', true);
+  // req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  req.send({name: review.name, semester: review.semester, year: review.year, review: review.review});
+  // req.send(JSON.stringify(review));
+
+  req.addEventListener('load', () => {
+    const table = document.querySelector('tbody');
+    const row = document.createElement('tr');
+
+    Object.keys(review).forEach((key) => {
+      if (key !== '_id') {
+        const data = document.createElement('td');
+        data.textContent = review[key];
+        row.appendChild(data);
+      }
+    });
+
+    table.appendChild(row);
+
+    const filterSemester = document.getElementById('filterSemester');
+    filterSemester.value = 'All';
+
+    const filterYear = document.getElementById('filterYear');
+    filterYear.value = '';
+
+    filter();
+
+
+  });
+  const body = 'name='+review.name+'&semester='+review.semester+'&year='+review.year+'&review='+review.review;
+  req.send(body);
+
+
 
 }
 
