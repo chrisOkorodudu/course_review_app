@@ -7,7 +7,6 @@ function getReviews() {
 
   req.open('GET', '/api/reviews');
   req.addEventListener('load', () => {
-    console.log(req.responseText);
 
     const reviews = JSON.parse(req.responseText);
     const table = document.querySelector('tbody');
@@ -44,7 +43,6 @@ function filter(evt) {
 
   req.open('GET', 'api/reviews/' + query);
   req.addEventListener('load', () => {
-    console.log("Response Text: " + req.responseText);
     const reviews = JSON.parse(req.responseText);
     const table = document.querySelector('tbody');
     while (table.firstChild) {
@@ -83,9 +81,7 @@ function addReview(evt) {
 
   const req = new XMLHttpRequest();
   req.open('POST', 'api/review/create', true);
-  // req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  // req.send(JSON.stringify(review));
 
   req.addEventListener('load', () => {
     const table = document.querySelector('tbody');
